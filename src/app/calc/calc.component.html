@@ -1,0 +1,50 @@
+<div class="text-center">
+    <div class="mb-5">
+        <div class="m-5">
+            <h1 class="display-4 mb-3">Total Aave staked</h1>
+            <span class="alert alert-success p-2">
+                <span *ngIf="isNumber(staked); else elseBlk">{{ staked | number:'1.2-4' }} AAVE</span>
+                <ng-template #elseBlk>{{ staked }}</ng-template>
+            </span>
+        </div>
+
+        <div class="m-5">
+            <h1 class="display-4 mb-3">APY</h1>
+            <span class="alert alert-success p-2">{{ apy | number:'1.2-2' }}%</span>
+        </div>
+    </div>
+
+
+
+    <form (ngSubmit)="onCalculate()">
+        <div clas="form-group">
+            <input [formControl]="ownedNum" class="form-control form-control-lg w-50 mx-auto" name="ownedNum" required type="number"
+                placeholder="Aave owned">
+        </div>
+        <button class="btn btn-warning m-3">Calculate</button>
+    </form>
+
+    <div *ngIf="error" class="alert alert-danger w-50 mx-auto">
+        {{ error }}
+    </div>
+    <div *ngIf="calculation" class="w-50 mx-auto mt-4">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
+                Daily earnings
+                <span class="badge badge-primary badge-pill">{{ calculation.daily | number:'1.2-2' }} AAVE</span>
+            </li>
+            <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
+                Weekly earnings
+                <span class="badge badge-primary badge-pill">{{ calculation.weekly | number:'1.2-2' }} AAVE</span>
+            </li>
+            <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
+                Monthly earnings
+                <span class="badge badge-primary badge-pill">{{ calculation.monthly | number:'1.2-2' }} AAVE</span>
+            </li>
+            <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
+                Yearly earnings
+                <span class="badge badge-primary badge-pill">{{ calculation.yearly | number:'1.2-2' }} AAVE</span>
+            </li>
+        </ul>
+    </div>
+</div>
