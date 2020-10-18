@@ -18,16 +18,16 @@
 
     <form (ngSubmit)="onCalculate()">
         <div clas="form-group">
-            <input [formControl]="ownedNum" class="form-control form-control-lg w-50 mx-auto" name="ownedNum" required type="number"
+            <input [formControl]="ownedNum" class="form-control form-control-lg mx-auto" name="ownedNum" required type="number"
                 placeholder="Aave owned">
         </div>
         <button class="btn btn-warning m-3">Calculate</button>
     </form>
 
-    <div *ngIf="error" class="alert alert-danger w-50 mx-auto">
+    <div *ngIf="error" class="alert alert-danger mx-auto">
         {{ error }}
     </div>
-    <div *ngIf="calculation" class="w-50 mx-auto mt-4">
+    <div *ngIf="calculation" class="mx-auto mt-4">
         <ul class="list-group">
             <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
                 Daily earnings
