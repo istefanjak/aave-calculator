@@ -1,4 +1,4 @@
-app-root{display:flex;flex-direction:column;min-height:100vh}.red-font{color:#ba1d21}
+@import url(https://fonts.googleapis.com/css2?family=Raleway&display=swap);@import url(https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap);app-root{display:flex;flex-direction:column;min-height:100vh}.red-font{color:#ba1d21}
 /*!
  * Bootstrap v4.5.3 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
