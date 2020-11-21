@@ -1,0 +1,30 @@
+h2 {
+    font-size: 2em;
+}
+
+.num-info {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1.33em;
+    font-weight: bold;
+}
+
+.mono {
+    font-family: "Courier New", Courier, monospace;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.card {
+    font-size: 1em;
+}
+
+.calc-input {
+    max-width: 420px;
+}
+
+#dailyReward label {
+    line-height: 2.5em;
+}
+

@@ -1,8 +1,8 @@
+import { RefreshLimitError } from './../common/errors/refresh-limit.error';
 import { EtherscanResponse, EtherscanService } from './../etherscan.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, NgForm } from '@angular/forms';
-import { Subscription, timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calc',
@@ -14,25 +14,49 @@ export class CalcComponent implements OnInit, OnDestroy {
   staked;
   apy;
   calculation;
-  error;
+
+  showDailyRewardChangeNote = false;
+
+  etherScanError = {
+    error: undefined,
+    timer: 0,
+    isTooManyRequests: function () { return this.error instanceof RefreshLimitError },
+    setError: function (error: Error, timerObservable: Observable<Number>) {
+      this.error = error;
+      timerObservable.subscribe(i => this.timer = i);
+    },
+    unsetError: function () { this.error = undefined; this.timer = 0; }
+  }
+  calculatorError: String;
+
   subscription: Subscription;
 
-  ownedNum = new FormControl('');
-  lastOwnedNum;
+
+  calcForm = new FormGroup({
+    ownedNum: new FormControl(''),
+    ownedNumNotPool: new FormControl('')
+  });
+
+  lastCalcForm: FormGroup;
 
   constructor(private etherscanService: EtherscanService) { }
 
   ngOnInit(): void {
-    this.subscription = timer(0, 6000).pipe(
-      switchMap(() => this.etherscanService.getTokenSupply())
-    ).subscribe((response: EtherscanResponse) => {
-      this.staked = response.result;
-      this.apy = this.dailyReward / this.staked * 365 * 100;
-      if (this.lastOwnedNum) this.refresh(this.lastOwnedNum);
+    this.subscription = this.etherscanService.getSubscription().subscribe(
+      (response) => {
+        this.showDailyRewardChangeNote = false;
+        
+        if (response instanceof Error) {
+          this.etherScanError.setError(response, this.etherscanService.getRefreshTimer());
+          return;
+        }
 
-    }, error => {
-      this.staked = error;
-    });
+        this.etherScanError.unsetError();
+        this.staked = response.result;
+        this.apy = this.dailyReward / this.staked * 365 * 100;
+        if (this.lastCalcForm) this.refresh(this.lastCalcForm);
+
+      });
   }
 
   ngOnDestroy() {
@@ -40,31 +64,48 @@ export class CalcComponent implements OnInit, OnDestroy {
   }
 
   onCalculate() {
-    console.log("onCalculate()");
-    this.refresh(this.ownedNum);
-    this.lastOwnedNum = new FormControl(this.ownedNum.value);
+    this.refresh(this.calcForm);
+    this.lastCalcForm = new FormGroup({
+      ownedNum: new FormControl(this.calcForm.get('ownedNum').value),
+      ownedNumNotPool: new FormControl(this.calcForm.get('ownedNumNotPool').value)
+    });
   }
 
-  refresh(value) {
-    console.log(this.lastOwnedNum);
-    if (value.errors) {
-      this.calculation = null;
-      this.error = "Please enter valid value!";
-      return;
-    }
+  refresh(formGrp: FormGroup) { 
+    let formCtrlOwnedNumNotPool = formGrp.get('ownedNumNotPool');
+    let formCtrlOwnedNum = formGrp.get('ownedNum');
 
-    let dailyProfitCentile = this.dailyReward / this.staked;
-    let val = +value.value;
-    this.error = null;
+    /*if (formGrp.invalid) {
+      this.calculation = null;
+      return;
+    }*/
+
+    if (!formCtrlOwnedNumNotPool.value)
+      formCtrlOwnedNumNotPool.setValue(0);
+
+    if (!formCtrlOwnedNum.value)
+      formCtrlOwnedNum.setValue(0);
+
+    let valNotPool = +formCtrlOwnedNumNotPool.value;
+    let valPool = +formCtrlOwnedNum.value;
+
+    let dailyProfitCentile = this.dailyReward / (+this.staked + valNotPool);
+    let daily_ = dailyProfitCentile * (valPool + valNotPool);
+    let newApy = this.dailyReward / (+this.staked + valNotPool) * 365 * 100;
+  
+    
+    
+    this.calculatorError = null;
     this.calculation = {
-      daily: dailyProfitCentile * val,
-      weekly: dailyProfitCentile * val * 7,
-      monthly: dailyProfitCentile * val * 30,
-      yearly: dailyProfitCentile * val * 365
+      apy: newApy,
+      daily: daily_,
+      weekly: daily_ * 7,
+      monthly: daily_ * 30,
+      yearly: daily_ * 365
     };
   }
 
-  isNumber(val): boolean {
-    return !isNaN(val);
+  onDailyRewardInput() {
+    this.showDailyRewardChangeNote = true;
   }
 }

@@ -1,49 +1,81 @@
-<div class="text-center">
+<div>
     <div class="mb-5">
-        <div class="m-5">
-            <h1 class="display-4 mb-3">Total Aave staked</h1>
-            <span class="alert alert-success p-2">
-                <span *ngIf="isNumber(staked); else elseBlk">{{ staked | number:'1.2-4' }} AAVE</span>
-                <ng-template #elseBlk>{{ staked }}</ng-template>
+        <div id="dailyReward">
+            <div class="float-left mr-3"><label for="dailyReward">Total daily reward:</label></div>
+            <div class="float-left"><input type="number" [(ngModel)]="dailyReward" (input)="onDailyRewardInput()" name="dailyReward" class="form-control" style="max-width: 100px"></div>
+            <div class="float-left ml-3"><label>AAVE</label></div>
+            <div class="clearfix"></div>
+            <div *ngIf="showDailyRewardChangeNote" class="alert alert-danger red-font">Applying on next refresh</div>
+        </div>
+        <hr>
+
+        <div class="my-5">
+            <h2 class="display-4 mb-3">Total AAVE staked</h2>
+            <span
+                [ngClass]="{ 'num-info': true,'alert': true, 'p-2': true, 'alert-info': !etherScanError.error, 'alert-danger': etherScanError.error}">
+                <span *ngIf="!etherScanError.error else errorBlk">{{ staked | number:'1.2-4' }} AAVE</span>
+                <ng-template #errorBlk>
+                    <span *ngIf="etherScanError.isTooManyRequests(); else otherErrors">
+                        Too many requests. Please wait <b>{{ etherScanError.timer }}s</b>
+                    </span>
+                    <ng-template #otherErrors>
+                        An error occured, retrying in:<b>{{ etherScanError.timer }}s</b>b><br>
+                        etherScanError.error
+                    </ng-template>
+                </ng-template>
             </span>
         </div>
+        <hr>
 
-        <div class="m-5">
-            <h1 class="display-4 mb-3">APY</h1>
-            <span class="alert alert-success p-2">{{ apy | number:'1.2-2' }}%</span>
+        <div class="my-5">
+            <h2 class="display-4 mb-3">APY</h2>
+            <span
+                [ngClass]="{ 'num-info': true, 'alert': true, 'p-2': true, 'alert-info': !etherScanError.error, 'alert-danger': etherScanError.error}">{{ apy | number:'1.2-2' }}%</span>
         </div>
+        <hr>
     </div>
 
 
 
-    <form (ngSubmit)="onCalculate()">
-        <div clas="form-group">
-            <input [formControl]="ownedNum" class="form-control form-control-lg mx-auto" name="ownedNum" required type="number"
-                placeholder="Aave owned">
+    <form [formGroup]="calcForm" (ngSubmit)="onCalculate()">
+        <h2 class="pb-2">Calculate staking rewrads:</h2>
+        <div clas="form-group row">
+            <input formControlName="ownedNumNotPool" class="form-control form-control-lg mb-2 mono calc-input"
+                name="ownedNumNotPool" type="number" placeholder="Enter AAVE not in pool">
+            <input formControlName="ownedNum" class="form-control form-control-lg mono calc-input" name="ownedNum"
+                type="number" placeholder="Enter AAVE currently in pool">
         </div>
-        <button class="btn btn-warning m-3">Calculate</button>
+        <button class="btn btn-warning my-3">Calculate</button>
     </form>
 
-    <div *ngIf="error" class="alert alert-danger mx-auto">
+    <div *ngIf="calculatorError" class="alert alert-danger mx-auto">
         {{ error }}
     </div>
     <div *ngIf="calculation" class="mx-auto mt-4">
         <ul class="list-group">
+            <li class="list-group-item list-group-item-warning d-flex justify-content-between align-items-center">
+                APY after staking
+                <span class="badge badge-primary badge-pill mono bold card">{{ calculation.apy | number:'1.2-2' }}%</span>
+            </li>
             <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
                 Daily earnings
-                <span class="badge badge-primary badge-pill">{{ calculation.daily | number:'1.2-2' }} AAVE</span>
+                <span class="badge badge-primary badge-pill mono bold card">{{ calculation.daily | number:'1.4-4' }}
+                    AAVE</span>
             </li>
             <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
                 Weekly earnings
-                <span class="badge badge-primary badge-pill">{{ calculation.weekly | number:'1.2-2' }} AAVE</span>
+                <span class="badge badge-primary badge-pill mono bold card">{{ calculation.weekly | number:'1.4-4' }}
+                    AAVE</span>
             </li>
             <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
                 Monthly earnings
-                <span class="badge badge-primary badge-pill">{{ calculation.monthly | number:'1.2-2' }} AAVE</span>
+                <span class="badge badge-primary badge-pill mono bold card">{{ calculation.monthly | number:'1.4-4' }}
+                    AAVE</span>
             </li>
             <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">
                 Yearly earnings
-                <span class="badge badge-primary badge-pill">{{ calculation.yearly | number:'1.2-2' }} AAVE</span>
+                <span class="badge badge-primary badge-pill mono bold card">{{ calculation.yearly | number:'1.4-4' }}
+                    AAVE</span>
             </li>
         </ul>
     </div>

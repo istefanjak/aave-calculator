@@ -1,4 +1,27 @@
-<div class="container">
-    <h1 class="text-center mt-3 mb-5">AAVE CALCULATOR</h1>
-    <app-calc></app-calc>
-</div>
+<main>
+    <header class="grey px-4">
+        <div class="container p-4">
+            <h1>AAVE <span>CALCULATOR</span>
+                <button class="float-right" style="font-size: 20px" (click)="toggleAbout()"
+                    (mouseenter)="onAboutMouseEnter()" (mouseleave)="onAboutMouseLeave()">
+                    <fa-icon [icon]="aboutIcon" size="2x" [spin]="rotate"
+                        [styles]="{'stroke': 'red', 'color': 'rgb(255, 193, 7)'}"></fa-icon>
+                </button>
+            </h1>
+        </div>
+    </header>
+
+    <div class="container px-4">
+        <div class="my-5">
+            <app-about *ngIf="showAbout"></app-about>
+        </div>
+        <app-calc></app-calc>
+    </div>
+</main>
+
+<footer class="grey px-4 mt-5">
+    <div class="container p-4">
+        Unofficial app by <a href="https://github.com/istefanjak/aave-calculator">Ivan Stefanjak</a><br>
+        AAVE token <a href="https://aave.com">webiste</a>
+    </div>
+</footer>
