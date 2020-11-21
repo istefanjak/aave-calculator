@@ -1,8 +1,9 @@
 import { RefreshLimitError } from './../common/errors/refresh-limit.error';
-import { EtherscanResponse, EtherscanService } from './../etherscan.service';
+import { EtherscanService } from './../etherscan.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-calc',
@@ -10,7 +11,7 @@ import { Observable, Subscription } from 'rxjs';
   styleUrls: ['./calc.component.css']
 })
 export class CalcComponent implements OnInit, OnDestroy {
-  dailyReward = 400.;
+  dailyReward: number = 400.;
   staked;
   apy;
   calculation;
@@ -39,9 +40,10 @@ export class CalcComponent implements OnInit, OnDestroy {
 
   lastCalcForm: FormGroup;
 
-  constructor(private etherscanService: EtherscanService) { }
+  constructor(private etherscanService: EtherscanService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.initDailyReward();
     this.subscription = this.etherscanService.getSubscription().subscribe(
       (response) => {
         this.showDailyRewardChangeNote = false;
@@ -53,7 +55,7 @@ export class CalcComponent implements OnInit, OnDestroy {
 
         this.etherScanError.unsetError();
         this.staked = response.result;
-        this.apy = this.dailyReward / this.staked * 365 * 100;
+        this.apy = this.dailyReward / this.staked * 365;
         if (this.lastCalcForm) this.refresh(this.lastCalcForm);
 
       });
@@ -61,6 +63,12 @@ export class CalcComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  initDailyReward() {
+    
+    let p = this.route.snapshot.params.dailyInit;
+    if (p) this.dailyReward = p;
   }
 
   onCalculate() {
@@ -91,7 +99,7 @@ export class CalcComponent implements OnInit, OnDestroy {
 
     let dailyProfitCentile = this.dailyReward / (+this.staked + valNotPool);
     let daily_ = dailyProfitCentile * (valPool + valNotPool);
-    let newApy = this.dailyReward / (+this.staked + valNotPool) * 365 * 100;
+    let newApy = this.dailyReward / (+this.staked + valNotPool) * 365;
   
     
     

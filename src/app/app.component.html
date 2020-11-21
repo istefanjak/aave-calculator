@@ -13,16 +13,14 @@
     </header>
 
     <div class="container px-4">
-        <div class="my-5">
-            <app-about *ngIf="showAbout"></app-about>
-        </div>
-        <app-calc></app-calc>
+        <app-about *ngIf="showAbout"></app-about>
+        <router-outlet></router-outlet>
     </div>
 </main>
 
 <footer class="grey px-4 mt-5">
     <div class="container p-4">
         Unofficial app by <a href="https://github.com/istefanjak/aave-calculator">Ivan Stefanjak</a><br>
-        AAVE token <a href="https://aave.com">webiste</a>
+        AAVE token <a href="https://aave.com">website</a>
     </div>
 </footer>

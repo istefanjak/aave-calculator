@@ -9,7 +9,7 @@ h2 {
 }
 
 .mono {
-    font-family: "Courier New", Courier, monospace;
+    font-family: 'Courier Prime', monospace;
 }
 
 .bold {
@@ -25,6 +25,15 @@ h2 {
 }
 
 #dailyReward label {
-    line-height: 2.5em;
+    line-height: 2em;
+}
+
+#dailyReward input {
+    max-width: 60px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid rgb(206, 212, 218);
+    text-align: center;
+    line-height: 0%;
 }
 
