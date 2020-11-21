@@ -1,6 +1,6 @@
 <div>
-    <div class="mt-4 mb-5">
-        <div id="dailyReward">
+    <div class="mt-4 mb-5 mb-md-3">
+        <section id="dailyReward">
             <div class="float-left mr-3">
                 <label for="dailyReward">Total daily reward:</label>
             </div>
@@ -12,39 +12,58 @@
             </div>
             <div class="clearfix"></div>
             <div *ngIf="showDailyRewardChangeNote" class="alert alert-danger red-font">Applying on next refresh</div>
-        </div>
-        <hr class="mt-2">
+        </section>
 
-        <div class="my-5">
-            <h2 class="display-4 mb-3">Total AAVE staked</h2>
-            <span
-                [ngClass]="{ 'num-info': true,'alert': true, 'p-2': true, 'alert-info': !etherScanError.error, 'alert-danger': etherScanError.error}">
-                <span *ngIf="!etherScanError.error else errorBlk">{{ staked | number:'1.2-4' }} AAVE</span>
-                <ng-template #errorBlk>
-                    <span *ngIf="etherScanError.isTooManyRequests(); else otherErrors">
-                        Too many requests. Please wait <b>{{ etherScanError.timer }}s</b>
-                    </span>
-                    <ng-template #otherErrors>
-                        An error occured, retrying in:<b>{{ etherScanError.timer }}s</b>b><br>
-                        etherScanError.error
-                    </ng-template>
-                </ng-template>
-            </span>
-        </div>
-        <hr>
+        <section *ngIf="!etherScanError.error; else errorBlk" class="row mt-3">
+            <div class="col-12 col-md-6 mb-5">
+                <div class="info-card">
+                    <div class="top bg-red">
+                        <h2>Total AAVE staked</h2>
+                    </div>
+                    <div class="bottom">
+                        <span class="mono">{{ staked | number:'1.2-4' }} AAVE</span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="my-5">
-            <h2 class="display-4 mb-3">APY</h2>
-            <span
-                [ngClass]="{ 'num-info': true, 'alert': true, 'p-2': true, 'alert-info': !etherScanError.error, 'alert-danger': etherScanError.error}">{{ apy | percent:'1.2-2' }}</span>
-        </div>
-        <hr>
+            <div class="col-12 col-md-6">
+                <div class="info-card">
+                    <div class="top bg-green">
+                        <h2>APY</h2>
+                    </div>
+                    <div class="bottom">
+                        <span class="mono">{{ apy | percent:'1.2-2' }}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <ng-template #errorBlk>
+            <section class="row mt-3">
+                <div class="col-12 col-md-6 mb-5">
+                    <div class="info-card">
+                        <div class="top bg-red">
+                            <h2>Error</h2>
+                        </div>
+                        <div class="bottom">
+                            <span *ngIf="etherScanError.isTooManyRequests(); else otherErrors">
+                                Too many requests. Please wait <b>{{ etherScanError.timer }}s</b>
+                            </span>
+                            <ng-template #otherErrors>
+                                An error occured, retrying in:<b>{{ etherScanError.timer }}s</b><br>
+                                <span class="small">{{ etherScanError.error }}</span>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </ng-template>
     </div>
 
 
 
     <form [formGroup]="calcForm" (ngSubmit)="onCalculate()">
-        <h2 class="pb-2">Calculate staking rewards</h2>
+        <h2 class="pb-5">Calculate staking rewards</h2>
         <div clas="form-group">
             <label for="ownedNumNotPool">Enter ammount looking to stake</label>
             <div class="input-group">

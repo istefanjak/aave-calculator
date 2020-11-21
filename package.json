@@ -7,8 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "deploy-gh": "ng build --prod --base-href='https://istefanjak.github.io/aave-calculator/' && ngh --dir dist/aave-calc"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

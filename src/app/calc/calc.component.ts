@@ -1,9 +1,9 @@
 import { RefreshLimitError } from './../common/errors/refresh-limit.error';
-import { EtherscanService } from './../etherscan.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { EtherscanService } from '../service/etherscan/etherscan.service';
 
 @Component({
   selector: 'app-calc',
@@ -47,7 +47,6 @@ export class CalcComponent implements OnInit, OnDestroy {
     this.subscription = this.etherscanService.getSubscription().subscribe(
       (response) => {
         this.showDailyRewardChangeNote = false;
-        
         if (response instanceof Error) {
           this.etherScanError.setError(response, this.etherscanService.getRefreshTimer());
           return;
