@@ -65,7 +65,7 @@
     <form [formGroup]="calcForm" (ngSubmit)="onCalculate()">
         <h2 class="pb-5">Calculate staking rewards</h2>
         <div clas="form-group">
-            <label for="ownedNumNotPool">Enter ammount looking to stake</label>
+            <label for="ownedNumNotPool">Enter amount looking to stake</label>
             <div class="input-group">
                 <input formControlName="ownedNumNotPool" class="form-control form-control-lg mono calc-input"
                     name="ownedNumNotPool" type="number">
@@ -76,7 +76,7 @@
         </div>
 
         <div clas="form-group">
-            <label for="ownedNumNotPool" class="mt-3">Enter ammount already staking</label>
+            <label for="ownedNumNotPool" class="mt-3">Enter amount already staking</label>
             <div class="input-group">
                 <input formControlName="ownedNum" class="form-control form-control-lg mono calc-input" name="ownedNum"
                     type="number">
@@ -89,7 +89,7 @@
     </form>
 
     <div *ngIf="calculatorError" class="alert alert-danger mx-auto">
-        {{ error }}
+        {{ calculatorError }}
     </div>
     <div *ngIf="calculation" class="mx-auto mt-4">
         <ul class="list-group">
