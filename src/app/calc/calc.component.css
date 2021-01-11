@@ -53,16 +53,12 @@ h2 {
     font-weight: normal;
 }
 
-#dailyReward label {
-    line-height: 2em;
+#customEmissionForm input {
+  max-width: 16rem;
+  display: inline-block;
 }
 
-#dailyReward input {
-    max-width: 60px;
-    outline: none;
-    border: none;
-    border-bottom: 1px solid rgb(206, 212, 218);
-    text-align: center;
-    line-height: 0%;
+#customEmissionForm button {
+  max-width: 16rem;
+  margin-left: .5rem;
 }
-

@@ -7,13 +7,18 @@ import { AppComponent } from './app.component';
 import { CalcComponent } from './calc/calc.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AboutComponent } from './about/about.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { GasComponent } from './gas/gas.component';
+import { NavComponent } from './nav/nav.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalcComponent,
-    AboutComponent
+    AboutComponent,
+    GasComponent,
+    NavComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -21,7 +26,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

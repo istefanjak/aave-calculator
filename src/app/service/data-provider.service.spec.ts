@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EtherscanService } from './etherscan.service';
+import { DataProviderService } from './data-provider.service';
 
-describe('EtherscanService', () => {
-  let service: EtherscanService;
+describe('DataProviderService', () => {
+  let service: DataProviderService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EtherscanService);
+    service = TestBed.inject(DataProviderService);
   });
 
   it('should be created', () => {

@@ -1,0 +1,16 @@
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color:  rgb(255, 193, 7);
+}
+
+@media (min-width: 576px) {
+  h1 {
+      word-spacing: 0.5em;
+  }
+}
+
+h1 > span {
+  color: #e5e5e5;
+  font-size: 0.66em;
+}

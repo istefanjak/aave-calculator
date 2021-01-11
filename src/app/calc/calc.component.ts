@@ -1,118 +1,120 @@
-import { RefreshLimitError } from './../common/errors/refresh-limit.error';
+import { CalcData } from './../model/stake.model';
+import { DataProviderService } from './../service/data-provider.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { EtherscanService } from '../service/etherscan/etherscan.service';
+import { Subscription } from 'rxjs';
+import { StakeData } from '../model/stake.model';
 
 @Component({
   selector: 'app-calc',
   templateUrl: './calc.component.html',
-  styleUrls: ['./calc.component.css']
+  styleUrls: ['./calc.component.css'],
 })
 export class CalcComponent implements OnInit, OnDestroy {
-  dailyReward: number = 400.;
-  staked;
-  apy;
-  calculation;
+  stakeData: StakeData;
+  customEmissionCheckbox: boolean = false;
+  customEmission: number;
+  calculation: CalcData;
 
-  showDailyRewardChangeNote = false;
+  error: string;
 
-  etherScanError = {
-    error: undefined,
-    timer: 0,
-    isTooManyRequests: function () { return this.error instanceof RefreshLimitError },
-    setError: function (error: Error, timerObservable: Observable<Number>) {
-      this.error = error;
-      timerObservable.subscribe(i => this.timer = i);
-    },
-    unsetError: function () { this.error = undefined; this.timer = 0; }
-  }
-  calculatorError: String;
+  providerSubs: Subscription[] = new Array(2);
+  calcSub: Subscription;
 
-  subscription: Subscription;
+  calcForm: FormGroup;
 
-
-  calcForm = new FormGroup({
-    ownedNum: new FormControl(''),
-    ownedNumNotPool: new FormControl('')
-  });
-
-  lastCalcForm: FormGroup;
-
-  constructor(private etherscanService: EtherscanService, private route: ActivatedRoute) { }
+  constructor(private dataProviderService: DataProviderService) {}
 
   ngOnInit(): void {
-    this.initDailyReward();
-    this.subscription = this.etherscanService.getSubscription().subscribe(
-      (response) => {
-        this.showDailyRewardChangeNote = false;
-        if (response instanceof Error) {
-          this.etherScanError.setError(response, this.etherscanService.getRefreshTimer());
-          return;
-        }
+    this.calcForm = new FormGroup({
+      ownedNum: new FormControl(null),
+      ownedNumNotPool: new FormControl(null),
+    });
 
-        this.etherScanError.unsetError();
-        this.staked = response.result;
-        this.apy = this.dailyReward / this.staked * 365;
-        if (this.lastCalcForm) this.refresh(this.lastCalcForm);
-
-      });
+    if (this.dataProviderService.stakeData) {
+      this.stakeData = new StakeData(this.dataProviderService.stakeData, this.customEmission);
+    }
+    this.providerSubs.push(
+      this.dataProviderService.stakeData$.subscribe((res) => {
+        this.stakeData = new StakeData(res, this.customEmission);
+      })
+    );
+    this.providerSubs.push(
+      this.dataProviderService.stakeDataError$.subscribe((err) => {
+        this.error = err;
+      })
+    );
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.providerSubs.forEach(s => s?.unsubscribe());
+    this.calcSub?.unsubscribe();
   }
 
-  initDailyReward() {
-    
-    let p = this.route.snapshot.params.dailyInit;
-    if (p) this.dailyReward = p;
+  get ownedNum() {
+    return this.calcForm.get('ownedNum').value;
+  }
+
+  set ownedNum(val: number) {
+    this.calcForm.get('ownedNum').setValue(val);
+  }
+
+  get ownedNumNotPool() {
+    return this.calcForm.get('ownedNumNotPool').value;
+  }
+
+  set ownedNumNotPool(val: number) {
+    this.calcForm.get('ownedNumNotPool').setValue(val);
+  }
+
+  get customEmissionToSend() {
+    return this.customEmissionCheckbox && this.customEmission
+      ? this.customEmission
+      : null;
+  }
+
+  onCheckboxClick() {
+    if (this.customEmissionCheckbox && this.customEmission) {
+      this.refreshStakeData();
+    } else {
+      this.customEmission = null;
+      this.refreshStakeData();
+    }
+  }
+
+  onCustomEmissionConfirm(val: number) {
+    this.customEmission = val;
+    this.refreshStakeData();
   }
 
   onCalculate() {
-    this.refresh(this.calcForm);
-    this.lastCalcForm = new FormGroup({
-      ownedNum: new FormControl(this.calcForm.get('ownedNum').value),
-      ownedNumNotPool: new FormControl(this.calcForm.get('ownedNumNotPool').value)
+    if (this.ownedNum === null) this.ownedNum = 0;
+    if (this.ownedNumNotPool === null) this.ownedNumNotPool = 0;
+
+    this.calculation = this.stakeData.calcProfit(
+      this.ownedNum,
+      this.ownedNumNotPool
+    );
+
+    this.calcSub?.unsubscribe();
+    this.calcSub = this.dataProviderService.stakeData$.subscribe((res) => {
+      this.calculation = new StakeData(
+        res,
+        this.customEmissionToSend
+      ).calcProfit(this.ownedNum, this.ownedNumNotPool);
     });
   }
 
-  refresh(formGrp: FormGroup) { 
-    let formCtrlOwnedNumNotPool = formGrp.get('ownedNumNotPool');
-    let formCtrlOwnedNum = formGrp.get('ownedNum');
-
-    /*if (formGrp.invalid) {
-      this.calculation = null;
-      return;
-    }*/
-
-    if (!formCtrlOwnedNumNotPool.value)
-      formCtrlOwnedNumNotPool.setValue(0);
-
-    if (!formCtrlOwnedNum.value)
-      formCtrlOwnedNum.setValue(0);
-
-    let valNotPool = +formCtrlOwnedNumNotPool.value;
-    let valPool = +formCtrlOwnedNum.value;
-
-    let dailyProfitCentile = this.dailyReward / (+this.staked + valNotPool);
-    let daily_ = dailyProfitCentile * (valPool + valNotPool);
-    let newApy = this.dailyReward / (+this.staked + valNotPool) * 365;
-  
-    
-    
-    this.calculatorError = null;
-    this.calculation = {
-      apy: newApy,
-      daily: daily_,
-      weekly: daily_ * 7,
-      monthly: daily_ * 30,
-      yearly: daily_ * 365
-    };
-  }
-
-  onDailyRewardInput() {
-    this.showDailyRewardChangeNote = true;
+  private refreshStakeData() {
+    this.stakeData = new StakeData(
+      this.stakeData.apiStakeData,
+      this.customEmission
+    );
+    if (this.calculation) {
+      this.calculation = this.stakeData.calcProfit(
+        this.ownedNum,
+        this.ownedNumNotPool
+      );
+    }
   }
 }

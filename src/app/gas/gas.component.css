@@ -1,0 +1,29 @@
+.table-container {
+  max-width: 22rem;
+  padding: 1rem;
+  box-shadow: 0 .33rem 1.7rem rgba(0, 0, 0, .08);
+}
+
+table th {
+  width: 50%;
+  text-align: right;
+  line-height: 2.4rem;
+}
+
+table td {
+  font-weight: bold;
+  font-size: 1.8rem;
+  font-family: 'Courier Prime', monospace;
+}
+
+.safe {
+  color: #e07768;
+}
+
+.propose {
+  color: #ffc107;
+}
+
+.fast {
+  color: #4aada9;
+}
