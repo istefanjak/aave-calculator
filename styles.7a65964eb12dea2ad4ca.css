@@ -1,5 +1,4 @@
-@import url(https://fonts.googleapis.com/css2?family=Raleway&display=swap);@import url(https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap);*{font-family:Raleway,sans-serif}app-root{display:flex;flex-direction:column;min-height:100vh}.red-font{color:#ba1d21}.grey{background-color:#272727}.lightgrey{background-color:#e9e9e9}
-
+@import url(https://fonts.googleapis.com/css2?family=Raleway&display=swap);@import url(https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap);*{font-family:Raleway,sans-serif}app-root{display:flex;flex-direction:column;min-height:100vh}.bold{font-weight:700}.red-font{color:#ba1d21}.grey{background-color:#272727}.lightgrey{background-color:#e9e9e9}.bg-red{background-color:#e07768;color:#f8f9fa}.bg-green{background-color:#4aada9;color:#f8f9fa}.mono{font-family:Courier Prime,monospace}
 /*!
  * Bootstrap v4.5.3 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
