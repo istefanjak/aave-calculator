@@ -9,7 +9,19 @@ export interface ApiStakeData {
       ProposeGasPrice: string;
       FastGasPrice: string;
     };
+    eth_price: string;
+    aave_price: string;
     timestamp: Date;
+  };
+}
+
+export interface ApiGasLimitsData {
+  code: number;
+  response: {
+    gas_limit_stake: number;
+    gas_limit_claimRewards: number;
+    gas_limit_cooldown: number;
+    gas_limit_redeem: number;
   };
 }
 
@@ -57,7 +69,7 @@ export class StakeData {
   }
 
   get hasCustom() {
-    return this.stakeEmissionPerDayCustom? true: false;
+    return this.stakeEmissionPerDayCustom ? true : false;
   }
 }
 

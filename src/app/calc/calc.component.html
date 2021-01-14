@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-md-6 mb-5">
         <div class="info-card">
           <div class="top bg-green">
             <h2>APY</h2>
@@ -76,39 +76,44 @@
       <button class="btn btn-warning my-3">Calculate</button>
     </form>
 
-    <div *ngIf="calculation" class="mx-auto mt-4">
-      <ul class="list-group">
-        <li class="list-group-item list-group-item-warning d-flex">
-          <div class="bold">APY after staking</div>
-          <div class="ml-auto badge badge-warning badge-pill mono card">{{ calculation.newApy | percent:'1.2-2' }}
-          </div>
-        </li>
-        <li class="list-group-item list-group-item-dark d-flex">
-          <div class="bold">Earnings</div>
-          <div class="ml-auto bold">AAVE</div>
-        </li>
-        <li class="list-group-item list-group-item-light d-flex">
-          <div>Daily</div>
-          <div class="ml-auto badge badge-light badge-pill mono card">{{ calculation.daily | number:'1.4-4' }}
-          </div>
-        </li>
-        <li class="list-group-item list-group-item-light d-flex">
-          <div>Weekly</div>
-          <div class="ml-auto badge badge-light badge-pill mono card">{{ calculation.weekly | number:'1.4-4' }}
-          </div>
-        </li>
-        <li class="list-group-item list-group-item-light d-flex">
-          <div>Monthly</div>
-          <div class="ml-auto badge badge-light badge-pill mono card">{{ calculation.monthly | number:'1.4-4' }}
-          </div>
-        </li>
-        <li class="list-group-item list-group-item-light d-flex">
-          <div>Yearly</div>
-          <div class="ml-auto badge badge-light badge-pill mono card">{{ calculation.yearly | number:'1.4-4' }}
-          </div>
-        </li>
-      </ul>
+    <div *ngIf="calculation" class="mt-4 calc-table-container">
+      <table class="table table-sm table-borderless calc-table">
+        <thead>
+          <tr>
+            <th colspan="2">APY after staking</th>
+            <td>{{ calculation.newApy | percent:'1.2-2' }}</td>
+          </tr>
+          <tr>
+            <th scope="col">Earnings</th>
+            <th scope="col">AAVE</th>
+            <th scope="col">USD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Daily</th>
+            <td>{{ calculation.daily | number:'1.4-4' }}</td>
+            <td>{{ (calculation.daily * aavePrice) | number:'1.2-2' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Weekly</th>
+            <td>{{ calculation.weekly | number:'1.4-4' }}</td>
+            <td>{{ (calculation.weekly * aavePrice) | number:'1.2-2' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Monthly</th>
+            <td>{{ calculation.monthly | number:'1.4-4' }}</td>
+            <td>{{ (calculation.monthly * aavePrice) | number:'1.2-2' }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Yearly</th>
+            <td>{{ calculation.yearly | number:'1.4-4' }}</td>
+            <td>{{ (calculation.yearly * aavePrice) | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
   </div>
 </div>
 

@@ -8,7 +8,7 @@ import { StakeData } from '../model/stake.model';
 @Component({
   selector: 'app-calc',
   templateUrl: './calc.component.html',
-  styleUrls: ['./calc.component.css'],
+  styleUrls: ['./calc.component.scss'],
 })
 export class CalcComponent implements OnInit, OnDestroy {
   stakeData: StakeData;
@@ -71,6 +71,10 @@ export class CalcComponent implements OnInit, OnDestroy {
     return this.customEmissionCheckbox && this.customEmission
       ? this.customEmission
       : null;
+  }
+
+  get aavePrice() {
+    return +this.stakeData.apiStakeData.response.aave_price;
   }
 
   onCheckboxClick() {
