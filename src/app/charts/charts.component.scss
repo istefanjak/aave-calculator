@@ -1,0 +1,17 @@
+.options {
+  .butt-chartType {
+    margin-bottom: 2rem;
+  }
+  .butt-timeSpan {
+    margin-bottom: 2rem;
+
+  }
+  button {
+    width: 6rem;
+    margin-right: .4rem;
+    margin-bottom: .4rem;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}

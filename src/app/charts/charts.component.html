@@ -1,0 +1,61 @@
+<div class="py-5">
+  <div class="options mb-3 row">
+    <div class="butt-chartType col-md-4">
+      <h4>Chart type</h4>
+      <select class="custom-select" (change)="setChart($event.target.value)">
+        <option value="count">Tx count</option>
+        <option value="stakeRedeemTotal">Stake & redeem totals</option>
+        <option value="gasAvg">Gas averages</option>
+        <option value="gasTotal">Gas totals</option>
+      </select>
+    </div>
+    <div class="butt-timeSpan col-md-8">
+      <h4>Chart time span</h4>
+      <button class="btn btn-sm" [ngClass]="selected.timeSpan==7? 'btn-warning':'btn-light'" (click)="getData(7)">Last week</button>
+      <button class="btn btn-sm" [ngClass]="selected.timeSpan==30? 'btn-warning':'btn-light'" (click)="getData(30)">Last month</button>
+      <button class="btn btn-sm" [ngClass]="selected.timeSpan==365? 'btn-warning':'btn-light'" (click)="getData(365)">Last year</button>
+      <button class="btn btn-sm" [ngClass]="selected.timeSpan==14600? 'btn-warning':'btn-light'" (click)="getData(14600)">All</button>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading; else loadingBlk">
+
+    <div *ngIf="selected.type=='count'">
+      <h2 class="mb-5">Transactions count per day</h2>
+      <app-base-chart [data]="data.countGraph">
+      </app-base-chart>
+    </div>
+
+    <div *ngIf="selected.type=='stakeRedeemTotal'">
+      <h2 class="mb-5">Total AAVE staked & redeemed per day</h2>
+      <app-base-chart [data]="data.stakeRedeemTotalGraph">
+      </app-base-chart>
+    </div>
+
+    <div *ngIf="selected.type=='gasAvg'">
+      <h2 class="mb-5">Transactions gas averages per day (ETH)</h2>
+      <app-base-chart [data]="data.gasAvgGraph">
+      </app-base-chart>
+    </div>
+
+    <div *ngIf="selected.type=='gasTotal'">
+      <h2 class="mb-5">Transactions gas totals per day (ETH)</h2>
+      <app-base-chart [data]="data.gasTotalGraph">
+      </app-base-chart>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingBlk>
+  <div class="d-flex justify-content-center align-items-center pt-5">
+    <div class="spinner-grow text-danger mr-2" role="status"></div>
+    <div class="spinner-grow text-warning mr-2" role="status"></div>
+    <div class="spinner-grow text-info" role="status"></div>
+  </div>
+  <div class="text-center pt-2">Loading...</div>
+
+  <div *ngIf="error" class="alert alert-danger text-center my-4 py-4">
+    <h4>Error</h4>
+    <span>There seems to be an error with the server. Please wait or try refreshing the page.</span>
+  </div>
+</ng-template>

@@ -41,3 +41,22 @@ app-root {
 .mono {
   font-family: 'Courier Prime', monospace;
 }
+
+
+// CHARTS
+#chart-parent {
+  display: grid;
+  height: 25rem;
+  #chart {
+    .gridline-path-vertical {
+      display: none;
+    }
+    g.line-chart > g:last-of-type g.line-series > path {
+      stroke-width: 2px;
+      stroke-linecap: round;
+    }
+    .ngx-charts {
+        font-family: 'Courier Prime', monospace !important;
+    }
+  }
+}

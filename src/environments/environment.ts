@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   apiHostStake: 'http://localhost:8081/api/stake',
   apiHostGasLimits: 'http://localhost:8081/api/gaslimits',
+  apiGraph: 'http://localhost:8081/api/stake/graph',
 };
 
 /*

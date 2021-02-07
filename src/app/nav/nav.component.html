@@ -14,11 +14,15 @@
       <ul class="navbar-nav">
 
         <li class="nav-item" [class]="getActiveClass('/')">
-          <a class="nav-link" routerLink="/">Staking</a>
+          <a class="nav-link" routerLink="/">Rewards</a>
         </li>
 
         <li class="nav-item" [class]="getActiveClass('/gas')">
           <a class="nav-link" routerLink="/gas">Gas cost</a>
+        </li>
+
+        <li class="nav-item" [class]="getActiveClass('/charts')">
+          <a class="nav-link" routerLink="/charts">Charts</a>
         </li>
 
         <li class="nav-item" [class]="getActiveClass('/about')">
